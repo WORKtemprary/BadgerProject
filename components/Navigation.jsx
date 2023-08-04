@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import { useState, useEffect } from 'react';
 import styles from '@/styles/modules/Navigation.module.scss';
 import Link from 'next/link';
