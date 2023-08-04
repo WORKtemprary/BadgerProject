@@ -1,24 +1,25 @@
 import { useState, useEffect } from 'react';
 import styles from '@/styles/modules/Navigation.module.scss';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
+
 import useElementSize from '@/hooks/useElementSize';
 import useIsMounted from '@/hooks/useIsMounted';
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
+
 import Logo from './icons/Logo';
 import MobileNavigation from './MobileNavigation';
-import NavItem from './NavItem';
+
 import classNames from 'classnames';
+import headerNavLinks from '@/data/headerNavLinks';
 
 export default function Navigation() {
     const [navigationRef, { height }] = useElementSize();
     const isMounted = useIsMounted();
-    const { resolvedTheme, setTheme } = useTheme();
+
     const [sticky, setSticky] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            const isSticky = window.scrollY > 0; // Set sticky to true when user scrolls down
+            const isSticky = window.scrollY > 0;
             setSticky(isSticky);
         };
 
@@ -30,78 +31,43 @@ export default function Navigation() {
     }, []);
 
     return (
-        <>
-            <style jsx global>{`
-                :root {
-                    --navigation-height: ${height}px;
-                }
-            `}</style>
-            <header
-                className={classNames(
-                    styles['c-navigation'],
-                    {
-                        [styles['is-sticky']]: sticky,
-                    }
-                )}
-                ref={(el) => {
-                    navigationRef(el);
-                }}
-            >
-                <div className="o-container">
-                    <div className={styles['c-navigation__row']}>
-                        <div className={styles['c-navigation__logo']}>
-                            <Link href="/" title="Next.js starter">
-                                <Logo />
-                            </Link>
-                        </div>
-                        <MobileNavigation />
-                        <nav className={styles['c-navigation__nav']}>
-                            <div className={styles['c-navigation__nav__primary']}>
-                                <div className={styles['c-navigation__nav__primary--list']}>
-                                    <ul>
-                                        <li>
-                                            <NavItem
-                                                href="/gsap"
-                                                className={styles['is-current-page']}
-                                                overflowHidden
-                                                delay={0.7}
-                                                ease="power.out"
-                                                y="15px"
-                                                rotate={7}
-                                                title="HOME"
-                                            />
-                                        </li>
-                                        <li>
-                                            <NavItem
-                                                href="/accordion"
-                                                className={styles['is-current-page']}
-                                                overflowHidden
-                                                delay={0.9}
-                                                ease="power.out"
-                                                y="15px"
-                                                rotate={7}
-                                                title="DASHBOARD"
-                                            />
-                                        </li>
-                                        {/* More NavItems */}
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
-                        <div className={styles['c-navigation__switch']}>
-                            {isMounted() && (
-                                <DarkModeSwitch
-                                    checked={resolvedTheme === 'dark' ? true : false}
-                                    onChange={() =>
-                                        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
-                                    }
-                                    size={35}
-                                />
-                            )}
+        <header className={`sticky top-0 z-[110] flex items-center justify-between px-4 py-0 sm:py-2 md:py-2 border-b border-gray-200 backdrop-blur-lg backdrop-filter dark:border-gray-700 bg-opacity-30 blur-10`}>
+            <div>
+                <Link href="/" aria-label="Next.js starter">
+                    <div className="sticky flex h-10 w-10 items-center justify-between">
+                        <div className="ml-3" style={{ color: '#00FF00' }}>
+                            <Logo />
                         </div>
                     </div>
-                </div>
-            </header>
-        </>
+                </Link>
+            </div>
+
+            <div className="hidden sm:block">
+                <div className="flex items-center gap-6 justify-end flex-1 ml-4 ">
+                    {headerNavLinks.map((link) => (
+                         <div className="w-[140px] h-[53px] relative shadow">
+                         <div className="w-[140px] h-[53.23px] left-0 top-0 absolute rounded-2xl border border-red-800" />
+                         <div className="w-[140px] h-[53.23px] left-0 top-0 absolute bg-gradient-to-b from-orange-200 via-amber-300 to-orange-400 rounded-2xl border border-orange-500" />
+                         <div className="left-[25.65px] top-[15.29px] absolute text-center">
+                         <Link
+            href={link.href}
+          className=''
+          >
+            {link.title}
+          </Link>
+                         </div>
+                         <div className="w-[8.52px] h-[4.26px] left-[17.30px] top-[7.45px] absolute bg-white bg-opacity-60 rounded-lg" />
+                         <div className="w-[12.78px] h-[4.26px] left-[27.95px] top-[7.45px] absolute bg-white bg-opacity-60 rounded-lg" />
+                       </div>
+                    ))}
+
+                 
+        <div className="pl-12"></div>
+        </div>
+       
+      </div>
+      < MobileNavigation />
+  
+        </header>
     );
 }
